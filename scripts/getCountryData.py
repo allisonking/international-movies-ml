@@ -8,17 +8,19 @@ def main():
     """Main entry point for the script."""
 
     # open links.csv in order to access IMDB id numbers
-    # movieId, imdbId, tmbdId
     linkFile = open('../movie-lens-data/links.csv', "rb")
     linkReader = csv.reader(linkFile)
 
-    # open movies.csv so we can append to it
+    # open movies.csv so we can find the data to append to
     movieFile = open('../movie-lens-data/movies.csv', "rb")
     movieReader = csv.reader(movieFile)
     
-    # writer
-    ofile = open('movie-countries.csv', "wb")
-    writer = csv.writer(ofile)
+    # writer for csv with countries
+    movie_countries_ofile = open('movie-countries.csv', "wb")
+    writer = csv.writer(movie_countries_ofile)
+
+    # writer for text file with every country we have movies from
+    all_countries_ofile = open('all_countries.txt', "wb")
     
     # deal with headers
     link_header = linkReader.next() # skip first line
@@ -27,31 +29,35 @@ def main():
     writer.writerow(country_header)
 
     # iterate through data
-    index = 0
+    all_countries = set()
     for row in linkReader:
-        if (index > 10):
-            break
-        
         # get the imdb url for the omdb api
         url = get_omdb_url(row[1])
 
         # get the list of countries associated with the movie
         countries = get_array_of_countries(url)
+
+        # add to set of countries
+        for country in countries.split("|"):
+            all_countries.add(country)
         
         # get the movie row
         movie_row = movieReader.next()
-        print movie_row
+
         # append the countries to it
         movie_row.append(countries)
+        print movie_row # this is mostly here so we can see the program is still running
 
         # write to the file
         writer.writerow(movie_row)
 
-        index = index + 1
+    for country in all_countries:
+        all_countries_ofile.write(country +"\n")
 
     linkFile.close()
     movieFile.close()
-    ofile.close()
+    movie_countries_ofile.close()
+    all_countries_ofile.close()
 
 def get_omdb_url(imdbId):
     omdb_url = 'http://www.omdbapi.com/?'
