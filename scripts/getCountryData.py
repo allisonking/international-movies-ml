@@ -18,9 +18,6 @@ def main():
     # writer for csv with countries
     movie_countries_ofile = open('movie-countries.csv', "wb")
     writer = csv.writer(movie_countries_ofile)
-
-    # writer for text file with every country we have movies from
-    all_countries_ofile = open('all_countries.txt', "wb")
     
     # deal with headers
     link_header = linkReader.next() # skip first line
@@ -29,17 +26,12 @@ def main():
     writer.writerow(country_header)
 
     # iterate through data
-    all_countries = set()
     for row in linkReader:
         # get the imdb url for the omdb api
         url = get_omdb_url(row[1])
 
         # get the list of countries associated with the movie
         countries = get_array_of_countries(url)
-
-        # add to set of countries
-        for country in countries.split("|"):
-            all_countries.add(country)
         
         # get the movie row
         movie_row = movieReader.next()
@@ -51,15 +43,12 @@ def main():
         # write to the file
         writer.writerow(movie_row)
 
-    for country in all_countries:
-        all_countries_ofile.write(country +"\n")
-
     linkFile.close()
     movieFile.close()
     movie_countries_ofile.close()
-    all_countries_ofile.close()
 
 def get_omdb_url(imdbId):
+    """Returns the OMDb http string request for the movie with this imdbId"""
     omdb_url = 'http://www.omdbapi.com/?'
     id_search_string='i=tt'
     return omdb_url+id_search_string+imdbId
