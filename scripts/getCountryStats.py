@@ -3,6 +3,7 @@
 import sys
 import csv
 
+
 def main():
     """Main entry point for the script."""
 
@@ -34,7 +35,6 @@ def main():
             # if it's the primary country
             if country == countries.split("|")[0]:
                 country_count_primary_dict[country] = country_count_primary_dict.get(country, 0) + 1
-        
 
     # write to the file
     for key, value in country_count_dict.iteritems():
@@ -44,4 +44,4 @@ def main():
     ofile.close()
 
 if __name__ == '__main__':
-    sys.exit(main());
+    sys.exit(main())
