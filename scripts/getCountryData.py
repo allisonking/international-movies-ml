@@ -3,30 +3,32 @@
 import sys
 import requests
 import csv
+import time
+
 
 def main():
     """Main entry point for the script."""
 
     # open links.csv in order to access IMDB id numbers
-    linkFile = open('../movie-lens-data/links.csv', "rb")
-    linkReader = csv.reader(linkFile)
+    link_file = open('../movie-lens-data-20m/links.csv', "rb")
+    link_reader = csv.reader(link_file)
 
     # open movies.csv so we can find the data to append to
-    movieFile = open('../movie-lens-data/movies.csv', "rb")
-    movieReader = csv.reader(movieFile)
+    movie_file = open('../movie-lens-data-20m/movies.csv', "rb")
+    movie_reader = csv.reader(movie_file)
     
     # writer for csv with countries
-    movie_countries_ofile = open('movie-countries.csv', "wb")
+    movie_countries_ofile = open('output/movie-countries-20m.csv', "wb")
     writer = csv.writer(movie_countries_ofile)
     
     # deal with headers
-    link_header = linkReader.next() # skip first line
-    country_header = movieReader.next()
+    link_reader.next() # skip first line
+    country_header = movie_reader.next()
     country_header.append("country")
     writer.writerow(country_header)
 
     # iterate through data
-    for row in linkReader:
+    for row in link_reader:
         # get the imdb url for the omdb api
         url = get_omdb_url(row[1])
 
@@ -34,7 +36,7 @@ def main():
         countries = get_array_of_countries(url)
         
         # get the movie row
-        movie_row = movieReader.next()
+        movie_row = movie_reader.next()
 
         # append the countries to it
         movie_row.append(countries)
@@ -43,9 +45,10 @@ def main():
         # write to the file
         writer.writerow(movie_row)
 
-    linkFile.close()
-    movieFile.close()
+    link_file.close()
+    movie_file.close()
     movie_countries_ofile.close()
+
 
 def get_omdb_url(imdbId):
     """Returns the OMDb http string request for the movie with this imdbId"""
@@ -53,12 +56,24 @@ def get_omdb_url(imdbId):
     id_search_string='i=tt'
     return omdb_url+id_search_string+imdbId
 
+
 def get_array_of_countries(url):
     """Returns a list of countries associated with a given movie"""
-    response = requests.get(url)
-    countries = response.json()['Country']
-    countries_string = str(countries)
-    return str(countries).replace(', ', '|')
+    try:
+        response = requests.get(url)
+
+    except requests.exceptions.ConnectionError:
+        print("Connection refused by server... sleeping then trying again")
+        time.sleep(5)
+        print("Trying again...")
+        response = requests.get(url)
+
+    try:
+        countries = response.json()['Country']
+    except ValueError:
+        print("JSON could not be parsed...")
+        return "JSONERROR"
+    return countries.encode('utf-8').replace(', ', '|')
 
 if __name__ == '__main__':
-    sys.exit(main());
+    sys.exit(main())
