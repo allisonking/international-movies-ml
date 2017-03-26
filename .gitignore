@@ -1,4 +1,4 @@
-movie-lens-data/
+movie-lens-data*/
 *~
 *.csv
 .idea/
