@@ -2,7 +2,7 @@
 # international-movies-ml
 Machine learning to recommend movies from around the world!
 
-Finds the user's preference in movies and returns to them a movie they would like from another country.
+One of the potential dangers in recommender systems is also what they are meant to do- recommend you things that you will continue to like. This can lead people to continue liking things they already like with nothing that would inspire them to try something out of their comfort zone. Branching out can lead to diversity in thinking as well as increased empathy. Therefore, the goal of this project is to deliberately use a user's preference to recommend them movies from another country. The user will be able to choose a country, then the recommender will use their preferences to recommend a movie for them from that country. This project was partly inspired by [Book Riot's list of 80 books from the 80 most populated countries in the world](http://bookriot.com/2016/04/28/around-world-80-books-global-reading-list/ "book riot list").
 
 ## scripts
 Folder for some helper scripts in order to gather initial data.
@@ -24,4 +24,4 @@ This script was an early attempt at learning to use [pandas](http://pandas.pydat
 A simple popularity recommender using [GraphLab](https://turi.com/ "graphlab homepage"), mostly based on [this tutorial](https://www.analyticsvidhya.com/blog/2016/06/quick-guide-build-recommendation-engine-python/ "tutorial"). This will always recommend the same movies for every user since there is no personalitzation- it is just recommending the most popular movies. This script uses 80% of the ratings.csv data and filters out the country the user is interested in. The script then recommends the top five movies from that country based on popularity.
 
 ### popularityRecommender.py
-Produces the same results as `popularityRecommenderGraphlab.py` but does not use the Graphlab library.
+Produces the same results as `popularityRecommenderGraphlab.py` but does not use the Graphlab library, only the pandas one.
