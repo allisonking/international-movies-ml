@@ -2,13 +2,11 @@
 
 import sys
 import pandas as pd
-import graphlab
-import graphlab.aggregate as agg
 from sklearn.model_selection import train_test_split
 
 
 def main():
-    """This is based on https://www.analyticsvidhya.com/blog/2016/06/quick-guide-build-recommendation-engine-python/"""
+    """Main entry point"""
     # declare country we are interested in
     country = "China"
 
@@ -16,36 +14,29 @@ def main():
     ratings_csv = "../movie-lens-data/ratings.csv"
     movies_csv = "../scripts/output/movie-countries.csv"
 
-    # get training data from ratings.csv as an sframe
-    train_data = get_training_data_sframe(ratings_csv)
+    # get training data from ratings.csv as a data frame
+    train_data = get_training_data(ratings_csv)
 
-    # get movie-country data as an sframe
-    movies = load_sframe(movies_csv)
+    # get movie-country data as a data frame
+    movies = pd.read_csv(movies_csv, encoding='utf-8', keep_default_na=False)
 
     # merge them
-    train_data_country = train_data.join(movies, on='movieId')
+    train_data_country = pd.merge(train_data, movies, on='movieId')
 
     # filter for country
-    country_filter = train_data_country[train_data_country.apply(lambda x: country in x['country'])]
+    country_filter = train_data_country[train_data_country.apply(lambda x: country in x['country'], axis=1)]
+    print "total number of movies associated with %s: %d" %(country, country_filter.shape[0])
 
-    # create the popularity model
-    popularity_model = graphlab.popularity_recommender.create(country_filter,
-                                                              user_id='userId', item_id='movieId',
-                                                              target='rating')
+    # get a list of the most popular movies
+    list_of_movies = get_ranking_of_movies(country_filter)
 
-    # get a list of top five recommended movies for user#1
-    # because this is a popularity model, it will be the same for every user
-    popularity_recommendations = popularity_model.recommend(users=range(1, 2), k=5).join(movies, on='movieId')
-    popularity_recommendations.print_rows(num_rows=5)
-
-    print_rating_stats(train_data_country)
+    # print the five most popular movies
+    print "=== Highest rated movies from %s ===" %(country)
+    print list_of_movies.head(n=5)
 
 
-def load_sframe(path):
-    return graphlab.SFrame(pd.read_csv(path, encoding='utf-8', keep_default_na=False))
-
-
-def get_training_data_sframe(ratings_path):
+def get_training_data(ratings_path):
+    """Returns the training data set as a data frame"""
     # read in ratings
     ratings = pd.read_csv(ratings_path, encoding='latin-1')
     print "total number of ratings: %d" % ratings.shape[0]
@@ -55,22 +46,14 @@ def get_training_data_sframe(ratings_path):
     print "number of ratings in training set: %d" % train.shape[0]
     print "number of ratings in test set: %d" % test.shape[0]
 
-    # transform pandas dframe into graphlab sframe
-    train_data = graphlab.SFrame(train)
-
-    return train_data
+    return train
 
 
-def print_rating_stats(data):
-    # this is just to see what the training data mean rating is to see if the popularity recommender is working
-    stats = data.groupby(key_columns='movieId',
-                         operations={
-                                   'mean_rating': agg.MEAN('rating'),
-                                   'std_rating': agg.STD('rating')
-                               })
+def get_ranking_of_movies(data):
+    """Returns a data frame of sorted movies by rating average"""
+    stats = data.groupby(by='title')['rating'].mean().sort_values(ascending=False)
+    return stats
 
-    # sort by mean rating, only show the ones with 5.0 ratings, merge with movie name/country data
-    print stats.sort(sort_columns='mean_rating', ascending=False).filter_by([5.0], 'mean_rating')
 
 if __name__ == '__main__':
     sys.exit(main())

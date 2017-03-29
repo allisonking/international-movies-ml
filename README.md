@@ -21,4 +21,4 @@ This script was an early attempt at learning to use [pandas](http://pandas.pydat
 ## recommenders
 
 ### popularityRecommender.py
-A simple popularity recommender using [GraphLab](https://turi.com/ "graphlab homepage"), mostly based on [this tutorial](https://www.analyticsvidhya.com/blog/2016/06/quick-guide-build-recommendation-engine-python/ "tutorial"). This will always recommend the same movies for every user since there is no personalitzation- it is just recommending the most popular movies.
+A simple popularity recommender using [GraphLab](https://turi.com/ "graphlab homepage"), mostly based on [this tutorial](https://www.analyticsvidhya.com/blog/2016/06/quick-guide-build-recommendation-engine-python/ "tutorial"). This will always recommend the same movies for every user since there is no personalitzation- it is just recommending the most popular movies. This script uses 80% of the ratings.csv data and filters out the country the user is interested in. The script then recommends the top five movies from that country based on popularity.
