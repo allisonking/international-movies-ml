@@ -23,6 +23,9 @@ def main():
     model = gl.item_similarity_recommender.create(training_data, user_id='userId', item_id='movieId',
                                                   target='rating', similarity_type='cosine')
 
+    # save the model
+    model.save('saved-models/item_similarity_model')
+
     # make 5 recommendations for users 1-6
     recommendations = model.recommend(users=range(1, 2), k=num_movies).join(movies_data, on='movieId')\
         .sort(sort_columns=['userId', 'rank'], ascending=True)
