@@ -33,6 +33,9 @@ def main():
                                                               user_id='userId', item_id='movieId',
                                                               target='rating')
 
+    # save the model
+    popularity_model.save('saved-models/popularity_model')
+
     # get a list of top five recommended movies for user#1
     # because this is a popularity model, it will be the same for every user
     popularity_recommendations = popularity_model.recommend(users=range(1, 2), k=5).join(movies, on='movieId')\
