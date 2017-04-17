@@ -17,7 +17,7 @@ def main():
     movies_csv = "../scripts/output/movie-countries.csv"
 
     # get training data from ratings.csv as an sframe
-    train_data = get_training_data_sframe(ratings_csv)
+    train_data, test_data = get_training_and_test_data_sframe(ratings_csv)
 
     # get movie-country data as an sframe
     movies = load_sframe(movies_csv)
@@ -41,12 +41,15 @@ def main():
 
     print_rating_stats(country_filter)
 
+    print "==== Precision and Recall ===="
+    print popularity_model.evaluate_precision_recall(test_data)
+
 
 def load_sframe(path):
     return graphlab.SFrame(pd.read_csv(path, encoding='utf-8', keep_default_na=False))
 
 
-def get_training_data_sframe(ratings_path):
+def get_training_and_test_data_sframe(ratings_path):
     # read in ratings
     ratings = pd.read_csv(ratings_path, encoding='latin-1')
     print "total number of ratings: %d" % ratings.shape[0]
@@ -58,8 +61,9 @@ def get_training_data_sframe(ratings_path):
 
     # transform pandas dframe into graphlab sframe
     train_data = graphlab.SFrame(train)
+    test_data = graphlab.SFrame(test)
 
-    return train_data
+    return train_data, test_data
 
 
 def print_rating_stats(data):

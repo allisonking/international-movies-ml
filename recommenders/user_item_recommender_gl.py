@@ -5,7 +5,7 @@ import graphlab as gl
 
 
 def main():
-    country_name = 'India'
+    country_name = 'UK'
 
     # read in the CSV file for ratings
     ratings_csv = '../movie-lens-data/ratings.csv'
@@ -24,19 +24,21 @@ def main():
                                                   target='rating', similarity_type='cosine')
 
     # make 5 recommendations for users 1-6
-    recommendations = model.recommend(users=range(2, 3), k=num_movies).join(movies_data, on='movieId')\
+    recommendations = model.recommend(users=range(1, 2), k=num_movies).join(movies_data, on='movieId')\
         .sort(sort_columns=['userId', 'rank'], ascending=True)
     recommendations.print_rows(num_rows=25)
 
     # filter for if country is credited
     recommendations_filter_has_country = recommendations[recommendations.apply(lambda x: country_name in x['country'])]
-    print recommendations_filter_has_country
+    print recommendations_filter_has_country.print_rows(num_rows=5)
 
     # filter for if country is sole creator
     recommendations_filter_sole_country = recommendations.filter_by(country_name, 'country')
-    print recommendations_filter_sole_country
+    print recommendations_filter_sole_country.print_rows(num_rows=5)
 
     # print model.evaluate_rmse(validation_data, target='rating')
+    print "==== Precision Recall ===="
+    print model.evaluate_precision_recall(validation_data)
 
 
 if __name__ == '__main__':
