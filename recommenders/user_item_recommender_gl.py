@@ -2,10 +2,12 @@
 
 import sys
 import graphlab as gl
+from calendar import timegm
+from datetime import datetime
 
 
 def main():
-    country_name = 'UK'
+    country_name = 'Japan'
 
     # read in the CSV file for ratings
     ratings_csv = '../movie-lens-data/ratings.csv'
@@ -42,6 +44,22 @@ def main():
     # print model.evaluate_rmse(validation_data, target='rating')
     print "==== Precision Recall ===="
     print model.evaluate_precision_recall(validation_data)
+
+    # make a recommendation to the user
+    new_user_data = prepare_new_user_data('../test-data/my_movie_ratings.csv', ratings_data)
+    recommendations = model.recommend([new_user_data['userId'][0]], k=num_movies, new_observation_data=new_user_data) \
+        .join(movies_data, on='movieId').sort(sort_columns=['rank'], ascending=True)
+    # print recommendations
+    print recommendations.filter_by(country_name, 'country')
+
+
+def prepare_new_user_data(csv_path, ratings_data):
+    new_user_data = gl.SFrame.read_csv(csv_path)
+    new_user_data.remove_column('title')
+    new_user_id = ratings_data['userId'].unique().shape[0] + 1
+    new_user_data.add_column(gl.SArray([new_user_id] * new_user_data.shape[0]), name='userId')
+    new_user_data.add_column(gl.SArray([timegm(datetime.utcnow().utctimetuple())] * new_user_data.shape[0]), name='timestamp')
+    return new_user_data
 
 
 if __name__ == '__main__':

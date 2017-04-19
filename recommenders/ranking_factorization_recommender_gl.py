@@ -48,7 +48,6 @@ def main():
     new_user_data = prepare_new_user_data('../test-data/my_movie_ratings.csv', ratings_data)
     recommendations = model.recommend([new_user_data['userId'][0]], k=num_movies, new_observation_data=new_user_data)\
         .join(movies_data, on='movieId').sort(sort_columns=['rank'], ascending=True)
-    #print recommendations
     print recommendations.filter_by(country_name, 'country')
 
 
