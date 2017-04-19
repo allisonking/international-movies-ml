@@ -10,11 +10,11 @@ def main():
     country_name = "USA"
 
     # read in the CSV file for ratings
-    ratings_csv = '../movie-lens-data/ratings.csv'
+    ratings_csv = '../movie-lens-data-20m/ratings.csv'
     ratings_data = gl.SFrame.read_csv(ratings_csv)
 
     # read in the CSV file for movie to movieIds
-    movies_csv = '../scripts/output/movie-countries.csv'
+    movies_csv = '../scripts/output/movie-countries-20m.csv'
     movies_data = gl.SFrame.read_csv(movies_csv)
     num_movies = movies_data.shape[0]
 
@@ -24,7 +24,7 @@ def main():
     model = gl.ranking_factorization_recommender.create(training_data, user_id='userId', item_id='movieId',
                                                         target='rating')
 
-    model.save('saved-models/ranking_factorization_model')
+    model.save('saved-models/ranking_factorization_model_20m')
 
     recommendations = model.recommend(users=range(1, 2), k=num_movies).join(movies_data, on='movieId') \
         .sort(sort_columns=['userId', 'rank'], ascending=True)

@@ -10,11 +10,11 @@ def main():
     country_name = 'Japan'
 
     # read in the CSV file for ratings
-    ratings_csv = '../movie-lens-data/ratings.csv'
+    ratings_csv = '../movie-lens-data-20m/ratings.csv'
     ratings_data = gl.SFrame.read_csv(ratings_csv)
 
     # read in the CSV file for movie to movieIds
-    movies_csv = '../scripts/output/movie-countries.csv'
+    movies_csv = '../scripts/output/movie-countries-20m.csv'
     movies_data = gl.SFrame.read_csv(movies_csv)
     num_movies = movies_data.shape[0]
 
@@ -26,7 +26,7 @@ def main():
                                                   target='rating', similarity_type='cosine')
 
     # save the model
-    model.save('saved-models/item_similarity_model')
+    model.save('saved-models/item_similarity_model_20m')
 
     # make 5 recommendations for users 1-6
     recommendations = model.recommend(users=range(1, 2), k=num_movies).join(movies_data, on='movieId')\
