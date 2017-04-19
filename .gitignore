@@ -3,6 +3,7 @@ movie-lens-data*/
 *.csv
 .idea/
 recommenders/saved-models
+scripts/output/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
