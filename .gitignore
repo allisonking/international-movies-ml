@@ -1,6 +1,7 @@
 movie-lens-data*/
 *~
-*.csv
+movie-lens-data/
+movie-lens-data-2om/
 .idea/
 recommenders/saved-models
 scripts/output/
