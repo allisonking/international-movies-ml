@@ -10,21 +10,24 @@ def main():
     country_name = "USA"
 
     # read in the CSV file for ratings
-    ratings_csv = '../movie-lens-data-20m/ratings.csv'
+    ratings_csv = '../movie-lens-data/ratings.csv'
     ratings_data = gl.SFrame.read_csv(ratings_csv)
 
     # read in the CSV file for movie to movieIds
-    movies_csv = '../scripts/output/movie-countries-20m.csv'
+    movies_csv = '../scripts/output/movie-countries.csv'
     movies_data = gl.SFrame.read_csv(movies_csv)
     num_movies = movies_data.shape[0]
 
     # split into train and test data
     training_data, validation_data = gl.recommender.util.random_split_by_user(ratings_data, 'userId', 'movieId')
 
-    model = gl.ranking_factorization_recommender.create(training_data, user_id='userId', item_id='movieId',
-                                                        target='rating')
+    movie_ids = movies_data['movieId']
+    item_info = gl.SFrame({'movieId': movie_ids, 'genre': movies_data['genres']})
 
-    model.save('saved-models/ranking_factorization_model_20m')
+    model = gl.ranking_factorization_recommender.create(training_data, user_id='userId', item_id='movieId',
+                                                        target='rating', item_data=item_info)
+
+    model.save('saved-models/ranking_factorization_model')
 
     recommendations = model.recommend(users=range(1, 2), k=num_movies).join(movies_data, on='movieId') \
         .sort(sort_columns=['userId', 'rank'], ascending=True)
