@@ -1,10 +1,6 @@
-movie-lens-data*/
 *~
-movie-lens-data/
-movie-lens-data-2om/
 .idea/
 recommenders/saved-models
-scripts/output/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
