@@ -4,6 +4,12 @@ Machine learning to recommend movies from around the world!
 
 One of the potential dangers in recommender systems is also what they are meant to do- recommend you things that you will continue to like. This can lead people to continue liking things they already like with nothing that would inspire them to try something out of their comfort zone. Branching out can lead to diversity in thinking as well as increased empathy. Therefore, the goal of this project is to deliberately use a user's preference to recommend them movies from another country. The user will be able to choose a country, then the recommender will use their preferences to recommend a movie for them from that country. This project was partly inspired by [Book Riot's list of 80 books from the 80 most populated countries in the world](http://bookriot.com/2016/04/28/around-world-80-books-global-reading-list/ "book riot list").
 
+## Jupyter Notebook
+A compilation of most of the code in this repository is in International Movie Recommender.ipynb, a Jupyter notebook. This can be read in GitHub or using [NBViewer](). The notebook provides a lot more explanation than the code does and walks through how I gathered country data, the different types of recommenders/machine learning alogirithms I looked at, and how I implemented each of them.
+
+## Jupyter slides
+A zip file of my presentation can be found in `presentation_with_internet.zip` as well as in `presentation_wo_internet.zip`. `presentation_with_internet.zip` is a smaller file overall since it does not include the [Requests.js]() library (it uses a CDN, so when loading it will need to access the internet in order for the slides to load correctly). `presentation_wo_internet.zip` can be viewed without internet- it includes a copy of the Requests.js library within the zip file. The slides can be stepped through with the left, right, up, and down arrows, as denoted by the arrow panel in the bottom right hand corner. You can also press ESC to view the slide deck as a whole. For the most part, this is a reformatted version of the Jupyter Notebook International Movie Recommender.ipynb. international_movie_recommender_slides.ipynb is the notebook that contains the metadata to generate these slides.
+
 ## scripts
 Folder for some helper scripts in order to gather initial data.
 
@@ -25,3 +31,4 @@ A simple popularity recommender using [GraphLab](https://turi.com/ "graphlab hom
 
 ### popularityRecommender.py
 Produces the same results as `popularityRecommenderGraphlab.py` but does not use the Graphlab library, only the pandas one.
+
