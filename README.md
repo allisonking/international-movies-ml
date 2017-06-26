@@ -10,13 +10,15 @@ A compilation of most of the code in this repository is in International Movie R
 ## Jupyter slides
 A zip file of my presentation can be found in `presentation_with_internet.zip` as well as in `presentation_wo_internet.zip`. `presentation_with_internet.zip` is a smaller file overall since it does not include the [Reveal.js](http://lab.hakim.se/reveal-js/#/) library (it uses a CDN, so when loading it will need to access the internet in order for the slides to load correctly). `presentation_wo_internet.zip` can be viewed without internet- it includes a copy of the Requests.js library within the zip file. The slides can be stepped through with the left, right, up, and down arrows, as denoted by the arrow panel in the bottom right hand corner. You can also press ESC to view the slide deck as a whole. For the most part, this is a reformatted version of the Jupyter Notebook International Movie Recommender.ipynb. international_movie_recommender_slides.ipynb is the notebook that contains the metadata to generate these slides.
 
+My personal site also hosts these slides for easy viewing [here](https://allisonking.github.io/movies-ml/international_movie_recommender_slides.slides.html#/).
+
 ## scripts
 Folder for some helper scripts in order to gather initial data.
 
 ### getCountryData.py
-This script uses the [requests](http://docs.python-requests.org/en/master/ "requests homepage") library to issue http requests to the OMDb API in order to find out further information about a given movie. The script runs through a list of movies (for example, MovieLens's links.csv), finds the IMDB ID, then looks up the movie through OMDb. From there, it finds the country associated with the movie and creates a new CSV that appends country data to the already existing movie data. 
+This script uses the [requests](http://docs.python-requests.org/en/master/ "requests homepage") library to issue http requests to the OMDb API in order to find out further information about a given movie. The script runs through a list of movies (for example, MovieLens's links.csv), finds the IMDB ID, then looks up the movie through OMDb. From there, it finds the country associated with the movie and creates a new CSV that appends country data to the already existing movie data.
 
-When running on a very large dataset (i.e. Movielens's 20 million ratings set), the http requests can often return a connection error due to too many requests. When the script gets a connection error, it sleeps for five seconds, then tries again. So far, this has always worked to successfully complete the http request. Sometimes, the returned JSON will be malformed, though it is not consistently on the same http request that this happens. If there is an error, then the script will fill in 'JSONERROR' under the country name and the user should go back and manually fill in the country. In the 100k dataset, this problem did not come up at all, however in the 20m dataset, it occurred 4 times. 
+When running on a very large dataset (i.e. Movielens's 20 million ratings set), the http requests can often return a connection error due to too many requests. When the script gets a connection error, it sleeps for five seconds, then tries again. So far, this has always worked to successfully complete the http request. Sometimes, the returned JSON will be malformed, though it is not consistently on the same http request that this happens. If there is an error, then the script will fill in 'JSONERROR' under the country name and the user should go back and manually fill in the country. In the 100k dataset, this problem did not come up at all, however in the 20m dataset, it occurred 4 times.
 
 ### getCountryStats.py
 This script creates a csv with three columns- country, number of movies, and number of primary movies. The country is the country associated with a movie, the number of movies is how many movies in the dataset are associated with the country, and the number of primary movies is how many movies list that country as its first country. This script takes in the output of `getCountryData.py`
@@ -31,4 +33,3 @@ A simple popularity recommender using [GraphLab](https://turi.com/ "graphlab hom
 
 ### popularityRecommender.py
 Produces the same results as `popularityRecommenderGraphlab.py` but does not use the Graphlab library, only the pandas one.
-
